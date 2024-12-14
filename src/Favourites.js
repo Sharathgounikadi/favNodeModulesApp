@@ -27,17 +27,14 @@ const Favourites = ({ favorites, deleteFavorite }) => {
 
         {favorites.length === 0 ? (
           <>
-            <p className="text-gray-500 text-2xl font-bold">No favorites added yet!</p>
+            <p className="text-gray-500 text-2xl font-bold">You don't have any favourites yet, Please add</p>
             <button
               className="bg-blue-500 text-white px-4 py-2 rounded mt-2"
-              onClick={() => navigate("/")}
-            >
-              Add Favorites
+              onClick={() => navigate("/")}>
+              Add Fav
             </button>
           </>
-
         ) : (
-
           <table className="w-full border border-gray-200 rounded-md">
             <thead>
               <tr className="bg-gray-100">

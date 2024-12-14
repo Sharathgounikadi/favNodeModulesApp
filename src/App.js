@@ -21,7 +21,7 @@ const App = () => {
 
   return (
     <Router>
-      <nav className="p-4 bg-gray-800 text-white flex justify-between">
+      <nav className="p-4  text-black flex justify-between">
         <Link to="/" className="text-lg font-bold">
           Home
         </Link>

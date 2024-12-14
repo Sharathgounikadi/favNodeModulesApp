@@ -31,7 +31,7 @@ const Search = ({ addFavorite }) => {
   };
 
   return (
-    <div className="min-h-screen p-6 bg-gray-100">
+    <div className="min-h-screen p-6">
       <h1 className="text-2xl font-bold text-center">Search NPM Packages</h1>
       <div className="mt-6">
         <input
