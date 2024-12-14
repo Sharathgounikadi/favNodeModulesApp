@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from "@headlessui/react";
+import { FaEdit } from "react-icons/fa";
 
 const EditModal = ({ favoriteId, favorites, updateFavorite }) => {
   const [open, setOpen] = useState(false);
@@ -7,7 +8,6 @@ const EditModal = ({ favoriteId, favorites, updateFavorite }) => {
 
   useEffect(() => {
     if (open) {
-      // Fetch favorite data from the `favorites` prop instead of `localStorage`
       const favoriteItem = favorites.find((fav) => fav.id === favoriteId);
       if (favoriteItem) {
         setFavoriteData({ name: favoriteItem.name, reason: favoriteItem.reason });
@@ -23,15 +23,18 @@ const EditModal = ({ favoriteId, favorites, updateFavorite }) => {
       return;
     }
 
-    // Pass updated data to the parent via `updateFavorite`
-    updateFavorite(favoriteId, favoriteData);
-    setOpen(false);
+    updateFavorite(favoriteId, favoriteData); // Update the favorite
+    setOpen(false); // Close the modal
   };
 
   return (
     <div>
-      <button onClick={handleOpen} className="text-blue-500 hover:underline">
-        Edit
+      <button
+        onClick={handleOpen}
+        className="text-green-500 hover:text-green-700"
+        title="Edit the favorite"
+      >
+        <FaEdit />
       </button>
       <Dialog open={open} onClose={handleOpen} className="relative z-10">
         <DialogBackdrop className="fixed inset-0 bg-gray-500/75 transition-opacity" />

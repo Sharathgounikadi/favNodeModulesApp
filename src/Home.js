@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import 'react-toastify/dist/ReactToastify.css';
 import { toast } from 'react-toastify';
 import { useNavigate } from "react-router-dom";
@@ -8,44 +8,73 @@ const Home = ({ addFavorite }) => {
     const [searchResults, setSearchResults] = useState([]);
     const [selectedPackage, setSelectedPackage] = useState("");
     const [reason, setReason] = useState("");
+    const [isPackageValid, setIsPackageValid] = useState(true);
+    const [isReasonValid, setIsReasonValid] = useState(true);
 
     const navigate = useNavigate();
-    const ans = JSON.parse(localStorage.getItem("favorites"));
-    if (ans && ans.id) {
-        console.log(ans.id);
-    } else {
-        console.log("No favorites found or 'id' is not defined.");
-    }
 
-
-    const fetchPackages = async () => {
-        if (!searchQuery) return;
-        const response = await fetch(`https://api.npms.io/v2/search?q=${searchQuery}`);
+    const fetchPackages = async (query) => {
+        if (!query) return;
+        const response = await fetch(`https://api.npms.io/v2/search?q=${query}`);
         const data = await response.json();
-        console.log(data)
         setSearchResults(data.results.map((pkg) => pkg.package.name));
     };
 
+    // Debouncing function
+    const debounce = (func, delay) => {
+        let timer;
+        return (...args) => {
+            clearTimeout(timer);
+            timer = setTimeout(() => func(...args), delay);
+        };
+    };
+
+    // Debounced fetchPackages
+    const debouncedFetchPackages = useCallback(debounce(fetchPackages, 500), []);
+
     useEffect(() => {
-        fetchPackages()
-    }, [])
+        if (searchQuery) {
+            debouncedFetchPackages(searchQuery);
+        } else {
+            setSearchResults([]);
+        }
+    }, [searchQuery, debouncedFetchPackages]);
 
     const handleSubmit = () => {
-        if (!selectedPackage || !reason) {
-            toast("Select Package or Add Reason", { autoClose: 1000 })
+        // Validation checks
+        let valid = true;
+
+        if (!selectedPackage) {
+            setIsPackageValid(false);
+            valid = false;
+        } else {
+            setIsPackageValid(true);
+        }
+
+        if (!reason) {
+            setIsReasonValid(false);
+            valid = false;
+        } else {
+            setIsReasonValid(true);
+        }
+
+        if (!valid) {
+            toast("Please fill in all required fields", { autoClose: 1000 });
             return;
         }
-        else {
-            const favorites = JSON.parse(localStorage.getItem("favorites")) || [];
-            const newFavorite = { name: selectedPackage, reason: reason };
-            favorites.push(newFavorite);
-            localStorage.setItem("favorites", JSON.stringify(favorites));
-            toast("Added to favorites", { autoClose: 1000 });
-            addFavorite(newFavorite);
-            setSelectedPackage("");
-            setReason("");
-            navigate("/favorites");
-        }
+
+        // Add to favorites if valid
+        const favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+        const newFavorite = { name: selectedPackage, reason: reason };
+        favorites.push(newFavorite);
+        localStorage.setItem("favorites", JSON.stringify(favorites));
+
+        toast("Added to favorites", { autoClose: 1000 });
+        addFavorite(newFavorite);
+
+        setSelectedPackage("");
+        setReason("");
+        navigate("/favorites");
     };
 
     return (
@@ -59,12 +88,6 @@ const Home = ({ addFavorite }) => {
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                 />
-                <button
-                    className="bg-blue-500 text-white px-4 py-2 mt-2 rounded"
-                    onClick={fetchPackages}
-                >
-                    Search
-                </button>
                 <ul className="mt-4 max-h-40 overflow-y-auto">
                     {searchResults.map((pkg) => (
                         <li key={pkg} className="p-4 border rounded-md">
@@ -79,18 +102,29 @@ const Home = ({ addFavorite }) => {
                         </li>
                     ))}
                 </ul>
-                <textarea
-                    className="border p-2 rounded w-full mt-4"
-                    placeholder="Why is this your favorite?"
-                    value={reason}
-                    onChange={(e) => setReason(e.target.value)}
-                />
-                <button
-                    className="bg-purple-500 text-white px-4 py-2 mt-2 rounded"
-                    onClick={handleSubmit}
-                >
-                    Submit
-                </button>
+               
+                <div className="mt-4">
+                    <label htmlFor="reason" className="block font-medium mb-1">
+                        Why is this your favorite?
+                    </label>
+                    <textarea
+                        id="reason"
+                        className={`border p-2 rounded w-full ${
+                            !isReasonValid ? "border-red-500" : "border-gray-300"
+                        }`}
+                        placeholder="Explain why this package is your favorite..."
+                        value={reason}
+                        onChange={(e) => setReason(e.target.value)}
+                    />
+                </div>
+                <div className="mt-4 flex justify-end">
+                    <button
+                        className="bg-purple-500 text-white px-4 py-2 rounded"
+                        onClick={handleSubmit}
+                    >
+                        Submit
+                    </button>
+                </div>
             </div>
         </div>
     );
