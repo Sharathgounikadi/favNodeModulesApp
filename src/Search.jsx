@@ -1,10 +1,15 @@
 import React, { useState } from "react";
+import 'react-toastify/dist/ReactToastify.css';
+import { toast } from 'react-toastify';
+import { useNavigate } from "react-router-dom";
 
 const Search = ({ addFavorite }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [selectedPackage, setSelectedPackage] = useState("");
   const [reason, setReason] = useState("");
+
+  const navigate=useNavigate();
 
   const fetchPackages = async () => {
     if (!searchQuery) return;
@@ -15,12 +20,14 @@ const Search = ({ addFavorite }) => {
 
   const handleSubmit = () => {
     if (!selectedPackage || !reason) {
-      alert("Please select a package and provide a reason!");
+      toast("Add reason",{autoClose:1000})
       return;
     }
+    toast("Added to favorites",{autoClose:1000})
     addFavorite({ name: selectedPackage, reason });
     setSelectedPackage("");
     setReason("");
+    navigate('/favorites');
   };
 
   return (
