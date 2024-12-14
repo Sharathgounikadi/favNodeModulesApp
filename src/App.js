@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import Favourites from "./Favourites";
-import { toast } from 'react-toastify';
 import Home from "./Home";
+import { toast } from 'react-toastify';
 
 const App = () => {
   const [favorites, setFavorites] = useState([]);
@@ -21,14 +21,14 @@ const App = () => {
 
   return (
     <Router>
-      <nav className="p-4 bg-gray-300 text-black flex justify-between">
+      <div className="p-4 bg-gray-500 text-black flex justify-between">
         <Link to="/" className="text-lg font-bold">
           Home
         </Link>
         <Link to="/favorites" className="text-lg font-bold">
           Favorites
         </Link>
-      </nav>
+      </div>
       <Routes>
         <Route
           path="/"
@@ -36,7 +36,7 @@ const App = () => {
         />
         <Route
           path="/favorites"
-          element={<Favourites favorites={favorites} deleteFavorite={deleteFavorite} />}
+          element={<Favourites favorites={favorites} deleteFavorite={deleteFavorite} setFavorites={setFavorites}/>}
         />
       </Routes>
     </Router>
