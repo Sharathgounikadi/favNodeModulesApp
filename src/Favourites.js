@@ -1,8 +1,11 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Favourites = ({ favorites, deleteFavorite }) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [itemToDelete, setItemToDelete] = useState(null);
+
+  const navigate = useNavigate();
 
   const handleDeleteClick = (id) => {
     setItemToDelete(id);
@@ -22,36 +25,46 @@ const Favourites = ({ favorites, deleteFavorite }) => {
           Your Favorite NPM Packages
         </div>
 
-        {favorites.length === 0 && (
-          <p className="text-gray-500">No favorites added yet!</p>
-        )}
+        {favorites.length === 0 ? (
+          <>
+            <p className="text-gray-500 text-2xl font-bold">No favorites added yet!</p>
+            <button
+              className="bg-blue-500 text-white px-4 py-2 rounded mt-2"
+              onClick={() => navigate("/")}
+            >
+              Add Favorites
+            </button>
+          </>
 
-        <table className="w-full border border-gray-200 rounded-md">
-          <thead>
-            <tr className="bg-gray-100">
-              <th className="text-left px-4 py-2">Package Name</th>
-              <th className="text-left px-4 py-2">Reason</th>
-              <th className="text-left px-4 py-2">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {favorites.map((fav) => (
-              <tr key={fav.id} className="border-t border-gray-200">
-                <td className="px-4 py-2 text-gray-700">{fav.name}</td>
-                <td className="px-4 py-2 text-gray-500">{fav.reason}</td>
-                <td className="px-4 py-2">
-                  <button className="text-blue-500 hover:underline mr-4">View</button>
-                  <button
-                    className="text-red-500 hover:underline"
-                    onClick={() => handleDeleteClick(fav.id)}
-                  >
-                    Delete
-                  </button>
-                </td>
+        ) : (
+
+          <table className="w-full border border-gray-200 rounded-md">
+            <thead>
+              <tr className="bg-gray-100">
+                <th className="text-left px-4 py-2">Package Name</th>
+                <th className="text-left px-4 py-2">Reason</th>
+                <th className="text-left px-4 py-2">Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {favorites.map((fav) => (
+                <tr key={fav.id} className="border-t border-gray-200">
+                  <td className="px-4 py-2 text-gray-700">{fav.name}</td>
+                  <td className="px-4 py-2 text-gray-500">{fav.reason}</td>
+                  <td className="px-4 py-2">
+                    <button className="text-blue-500 hover:underline mr-4">View</button>
+                    <button
+                      className="text-red-500 hover:underline"
+                      onClick={() => handleDeleteClick(fav.id)}
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
 
         {/* Delete Confirmation Modal */}
         {showDeleteModal && (

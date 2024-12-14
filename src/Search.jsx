@@ -20,7 +20,7 @@ const Search = ({ addFavorite }) => {
 
   const handleSubmit = () => {
     if (!selectedPackage || !reason) {
-      toast("Add reason",{autoClose:1000})
+      toast("Select Package or Add Reason",{autoClose:1000})
       return;
     }
     toast("Added to favorites",{autoClose:1000})

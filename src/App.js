@@ -1,14 +1,15 @@
 import React, { useState } from "react";
-import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import Search from "./Search";
 import Favourites from "./Favourites";
+import { toast } from 'react-toastify';
 
 const App = () => {
   const [favorites, setFavorites] = useState([]);
 
   const addFavorite = (pkg) => {
     if (favorites.some((fav) => fav.name === pkg.name)) {
-      alert("Package already exists in favorites!");
+      toast("Package already exists in favorites!");
       return;
     }
     setFavorites([...favorites, { id: Date.now(), ...pkg }]);
