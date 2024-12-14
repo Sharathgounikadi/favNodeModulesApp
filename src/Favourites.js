@@ -19,15 +19,14 @@ const Favourites = ({ favorites, deleteFavorite }) => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="p-10 rounded-md bg-white shadow-lg w-2/3">
-        <div className="font-bold text-left mb-6 text-2xl text-gray-700">
-          Your Favorite NPM Packages
-        </div>
-
+    <div className="flex items-center justify-center bg-gray-100 min-h-screen ">
+      <div className="p-10 rounded-md bg-white shadow-lg w-2/3">       
         {favorites.length === 0 ? (
           <>
-            <p className="text-gray-500 text-2xl font-bold">You don't have any favourites yet, Please add</p>
+          <div className="font-bold text-left mb-6 text-2xl text-gray-700">
+          Your Favorite NPM Packages
+        </div>
+            <p className="text-gray-500 text-2xl font-semibold">You don't have any favourites yet, Please add</p>
             <button
               className="bg-blue-500 text-white px-4 py-2 rounded mt-2"
               onClick={() => navigate("/")}>
@@ -35,6 +34,15 @@ const Favourites = ({ favorites, deleteFavorite }) => {
             </button>
           </>
         ) : (
+          <>
+          <div className="font-bold text-left mb-6 text-2xl text-gray-700 flex justify-around">
+          Your Favorite NPM Packages
+          <button
+              className="bg-blue-500 hover:bg-blue-300 text-white px-2 py-2 rounded  "
+              onClick={() => navigate("/")}>
+              Add Fav
+            </button>
+        </div>
           <table className="w-full border border-gray-200 rounded-md">
             <thead>
               <tr className="bg-gray-100">
@@ -61,7 +69,9 @@ const Favourites = ({ favorites, deleteFavorite }) => {
               ))}
             </tbody>
           </table>
+          </>
         )}
+        
 
         {/* Delete Confirmation Modal */}
         {showDeleteModal && (
