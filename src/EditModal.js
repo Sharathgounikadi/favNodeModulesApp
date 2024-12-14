@@ -22,9 +22,9 @@ const EditModal = ({ favoriteId, favorites, updateFavorite }) => {
       alert("Both fields are required!");
       return;
     }
-
-    updateFavorite(favoriteId, favoriteData); // Update the favorite
-    setOpen(false); // Close the modal
+    
+    updateFavorite(favoriteId, favoriteData); 
+    setOpen(false); 
   };
 
   return (

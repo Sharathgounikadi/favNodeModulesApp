@@ -5,7 +5,7 @@ import Modal from "./Modal";
 import EditModal from "./EditModal";
 
 const Favourites = ({ deleteFavorite, setFavorites }) => {
-  const [favorites, setLocalFavorites] = useState([]); // State for local storage items
+  const [favorites, setLocalFavorites] = useState([]); 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [itemToDelete, setItemToDelete] = useState(null);
 

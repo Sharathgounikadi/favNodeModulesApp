@@ -20,7 +20,6 @@ const Home = ({ addFavorite }) => {
         setSearchResults(data.results.map((pkg) => pkg.package.name));
     };
 
-    // Debouncing function
     const debounce = (func, delay) => {
         let timer;
         return (...args) => {
@@ -29,7 +28,6 @@ const Home = ({ addFavorite }) => {
         };
     };
 
-    // Debounced fetchPackages
     const debouncedFetchPackages = useCallback(debounce(fetchPackages, 500), []);
 
     useEffect(() => {
@@ -41,7 +39,6 @@ const Home = ({ addFavorite }) => {
     }, [searchQuery, debouncedFetchPackages]);
 
     const handleSubmit = () => {
-        // Validation checks
         let valid = true;
 
         if (!selectedPackage) {
@@ -63,7 +60,6 @@ const Home = ({ addFavorite }) => {
             return;
         }
 
-        // Add to favorites if valid
         const favorites = JSON.parse(localStorage.getItem("favorites")) || [];
         const newFavorite = { name: selectedPackage, reason: reason };
         favorites.push(newFavorite);

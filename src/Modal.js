@@ -4,9 +4,7 @@ import { FaEye } from "react-icons/fa";
 
 const Modal = ({ favoriteId, favorites }) => {
   const [open, setOpen] = useState(false);
-
   const favoriteData = favorites.find((fav) => fav.id === favoriteId);
-
   const handleOpen = () => setOpen(!open);
 
   return (

@@ -26,7 +26,9 @@ const App = () => {
       <div className=" text-black">
         <Navbar /> 
         <Routes>
-          <Route path="/" element={<Home addFavorite={addFavorite} />} />
+          <Route path="/" element={<Home 
+          addFavorite={addFavorite} 
+          />} />
           <Route
             path="/favorites"
             element={
