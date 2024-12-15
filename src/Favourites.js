@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaEye, FaEdit, FaTrash } from "react-icons/fa";
+import { FaTrash, FaEdit } from "react-icons/fa";
 import Modal from "./Modal";
 import EditModal from "./EditModal";
 
-const Favourites = ({ deleteFavorite, setFavorites }) => {
-  const [favorites, setLocalFavorites] = useState([]); 
+const Favourites = () => {
+  const [favorites, setFavorites] = useState([]);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [itemToDelete, setItemToDelete] = useState(null);
 
@@ -14,10 +14,16 @@ const Favourites = ({ deleteFavorite, setFavorites }) => {
   // Fetch favorites from localStorage on component mount
   useEffect(() => {
     const storedFavorites = JSON.parse(localStorage.getItem("favorites")) || [];
-    setLocalFavorites(storedFavorites);
+    setFavorites(storedFavorites);
   }, []);
 
-  // Delete Favorite
+  // Save changes to localStorage
+  const updateLocalStorage = (updatedFavorites) => {
+    setFavorites(updatedFavorites);
+    localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
+  };
+
+  // Delete a specific favorite
   const handleDeleteClick = (id) => {
     setItemToDelete(id);
     setShowDeleteModal(true);
@@ -25,19 +31,17 @@ const Favourites = ({ deleteFavorite, setFavorites }) => {
 
   const confirmDelete = () => {
     const updatedFavorites = favorites.filter((fav) => fav.id !== itemToDelete);
-    setLocalFavorites(updatedFavorites);
-    localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
+    updateLocalStorage(updatedFavorites);
     setShowDeleteModal(false);
     setItemToDelete(null);
   };
 
-  // Update Favorite
+  // Edit a specific favorite
   const updateFavorite = (id, updatedData) => {
     const updatedFavorites = favorites.map((fav) =>
       fav.id === id ? { ...fav, ...updatedData } : fav
     );
-    setLocalFavorites(updatedFavorites);
-    localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
+    updateLocalStorage(updatedFavorites);
   };
 
   return (
@@ -47,7 +51,6 @@ const Favourites = ({ deleteFavorite, setFavorites }) => {
         <h1 className="text-3xl font-bold text-gray-800 mb-4">
           Welcome to Favorite NPM Packages
         </h1>
-        {/* Show "Add Favourite" button only when favorites list is NOT empty */}
         {favorites.length > 0 && (
           <button
             className="bg-blue-500 hover:bg-blue-400 text-white font-medium px-6 py-2 rounded shadow"
@@ -85,26 +88,21 @@ const Favourites = ({ deleteFavorite, setFavorites }) => {
             <tbody>
               {favorites.map((fav) => (
                 <tr key={fav.id} className="border-t border-gray-200">
-                  <td className="border border-gray-200 px-4 py-2 text-gray-700">
-                    {fav.name}
-                  </td>
+                  <td className="border border-gray-200 px-4 py-2 text-gray-700">{fav.name}</td>
                   <td className="border border-gray-200 px-4 py-2">
                     <div className="flex items-center gap-4">
                       {/* View Action */}
-                      <Modal favoriteId={fav.id} favorites={favorites} />
+                      <Modal favorite={fav} />
 
                       {/* Edit Action */}
-                      <EditModal
-                        favoriteId={fav.id}
-                        favorites={favorites}
-                        updateFavorite={updateFavorite}
-                      />
+                      <EditModal favorite={fav} updateFavorite={updateFavorite} />
 
                       {/* Delete Action */}
                       <button
                         className="text-red-500 hover:text-red-700"
                         onClick={() => handleDeleteClick(fav.id)}
-                        title="Delete the favorite"
+                        title={`Delete the package ${fav.name}`}
+                        aria-label={`Delete package ${fav.name}`}
                       >
                         <FaTrash />
                       </button>
@@ -121,7 +119,9 @@ const Favourites = ({ deleteFavorite, setFavorites }) => {
       {showDeleteModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-6 rounded-md shadow-lg">
-            <div className="mb-4 text-gray-700">Are you sure you want to delete?</div>
+            <div className="mb-4 text-gray-700">
+              Are you sure you want to delete this package?
+            </div>
             <div className="flex justify-end gap-4">
               <button
                 className="bg-gray-300 px-4 py-2 rounded"
