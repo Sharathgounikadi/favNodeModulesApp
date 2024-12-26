@@ -29,17 +29,17 @@ const App = () => {
   };
 
   // Delete a specific favorite
-  const deleteFavorite = (id) => {
-    setFavorites(favorites.filter((fav) => fav.id !== id));
-  };
+  // const deleteFavorite = (id) => {
+  //   setFavorites(favorites.filter((fav) => fav.id !== id));
+  // };
 
   // Edit a specific favorite
-  const updateFavorite = (id, updatedData) => {
-    const updatedFavorites = favorites.map((fav) =>
-      fav.id === id ? { ...fav, ...updatedData } : fav
-    );
-    setFavorites(updatedFavorites);
-  };
+  // const updateFavorite = (id, updatedData) => {
+  //   const updatedFavorites = favorites.map((fav) =>
+  //     fav.id === id ? { ...fav, ...updatedData } : fav
+  //   );
+  //   setFavorites(updatedFavorites);
+  // };
 
   return (
     <Router>
@@ -54,9 +54,9 @@ const App = () => {
             path="/favorites"
             element={
               <Favourites
-                favorites={favorites}
-                deleteFavorite={deleteFavorite}
-                updateFavorite={updateFavorite}
+                // favorites={favorites}
+                // deleteFavorite={deleteFavorite}
+                // updateFavorite={updateFavorite}
               />
             }
           />

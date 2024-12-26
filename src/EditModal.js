@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from "@headlessui/react";
 import { FaEdit } from "react-icons/fa";
 
@@ -17,8 +17,8 @@ const EditModal = ({ favorite, updateFavorite }) => {
       return;
     }
 
-    updateFavorite(favorite.id, favoriteData); // Pass updated data to parent
-    setOpen(false); // Close modal
+    updateFavorite(favorite.id, favoriteData); 
+    setOpen(false); 
   };
 
   return (

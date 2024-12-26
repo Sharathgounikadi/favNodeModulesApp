@@ -6,7 +6,7 @@ const Modal = ({ favorite }) => {
   const [open, setOpen] = useState(false);
 
   const handleOpen = () => setOpen(!open);
-
+  // console.log(hello)
   return (
     <div>
       <button

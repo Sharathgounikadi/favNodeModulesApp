@@ -17,7 +17,12 @@ const Home = ({ addFavorite }) => {
         if (!query) return;
         const response = await fetch(`https://api.npms.io/v2/search?q=${query}`);
         const data = await response.json();
+        console.log(data)
         setSearchResults(data.results.map((pkg) => pkg.package.name));
+        // setPlace(data.results.map((pkg) => pkg.package.description))
+        // console.log(data.results.map((pkg) => pkg.package.description))
+        // console.log(data.results.map((pkg) => pkg.score.final))
+        // console.log(data.results.map((pkg) => pkg.score.detail.popularity))
     };
 
     const debounce = (func, delay) => {
