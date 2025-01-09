@@ -9,27 +9,19 @@ import axios from "axios";
 const App = () => {
   const [favorites, setFavorites] = useState([]);
 
-
   useEffect(() => {
-    // Fetch favorites from the API
     axios
       .get("https://favnodemodulesapp.onrender.com/api/favorites")
       .then((response) => {
         setFavorites(response.data);
       })
       .catch((error) => {
-        toast.error(error.messsage);
-        console.error("Error fetching favorites:", error.messsage);
+        toast.error(error.message);
+        console.error("Error fetching favorites:", error.message);
       });
   }, []);
 
-  // Add a favorite package
   const addFavorite = (pkg) => {
-    if (favorites.some((fav) => fav.name === pkg.name)) {
-      toast("Package already exists in favorites!");
-      return;
-    }
-
     axios
       .post("https://favnodemodulesapp.onrender.com/api/favorites", pkg)
       .then((response) => {
@@ -37,8 +29,8 @@ const App = () => {
         toast.success("Package added to favorites!");
       })
       .catch((error) => {
-        toast.error(error.messsage);
-        console.error( error.message);
+        toast.error("Failed to add package to favorites.");
+        console.error(error.message);
       });
   };
 
@@ -47,10 +39,10 @@ const App = () => {
       <div className="text-black">
         <Navbar />
         <Routes>
-          <Route path="/" element={<Home addFavorite={addFavorite} />} />
+          <Route path="/" element={<Home addFavorite={addFavorite} favorites={favorites} />} />
           <Route
             path="/favorites"
-            element={<Favourites favorites={favorites}  setFavorites={setFavorites}/>}
+            element={<Favourites favorites={favorites} setFavorites={setFavorites} />}
           />
         </Routes>
       </div>

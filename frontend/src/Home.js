@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
-const Home = ({ addFavorite }) => {
+const Home = ({ addFavorite, favorites }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [selectedPackage, setSelectedPackage] = useState("");
@@ -64,18 +64,19 @@ const Home = ({ addFavorite }) => {
       return;
     }
 
-    // Create a favorite object and invoke addFavorite
-    const favorite = { name: selectedPackage, reason };
-    try {
-      addFavorite(favorite);
-      toast.success("Package added to favorites successfully!", { autoClose: 2000 });
-      setSelectedPackage("");
-      setReason("");
-      navigate("/favorites");
-    } catch (error) {
-      toast.error("Failed to add package to favorites.");
-      console.error("Add Favorite Error:", error);
+    // Check if the package is already in favorites
+    if (favorites.some((fav) => fav.name === selectedPackage)) {
+      toast.warning("Package already exists in favorites!");
+      return;
     }
+
+    const favorite = { name: selectedPackage, reason };
+    addFavorite(favorite);
+
+    // Clear the form and navigate to favorites
+    setSelectedPackage("");
+    setReason("");
+    navigate("/favorites");
   };
 
   return (

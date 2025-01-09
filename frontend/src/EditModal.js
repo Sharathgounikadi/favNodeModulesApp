@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Dialog } from "@headlessui/react";
 import { FaEdit } from "react-icons/fa";
 import axios from "axios";
@@ -10,6 +10,14 @@ const EditModal = ({ favorite, updateFavorite }) => {
     name: favorite.name,
     reason: favorite.reason || "",
   });
+
+  // Sync favoriteData state with favorite prop when it changes
+  useEffect(() => {
+    setFavoriteData({
+      name: favorite.name,
+      reason: favorite.reason || "",
+    });
+  }, [favorite]);
 
   const handleOpen = () => setOpen(!open);
 
@@ -25,7 +33,7 @@ const EditModal = ({ favorite, updateFavorite }) => {
         reason: favoriteData.reason.trim(),
       })
       .then((response) => {
-        updateFavorite(favorite.id, response.data);
+        updateFavorite(favorite.id, response.data);  // Ensure it updates once
         toast("Package updated successfully!");
         setOpen(false);
       })

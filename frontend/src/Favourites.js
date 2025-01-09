@@ -11,21 +11,19 @@ const Favourites = ({ favorites, setFavorites }) => {
   const [itemToDelete, setItemToDelete] = useState(null);
   const navigate = useNavigate();
 
-  // Delete a specific favorite
   const handleDeleteClick = (id) => {
-    console.log("Deleting favorite with ID:", id); // Debug log
+    console.log("Deleting favorite with ID:", id);
     setItemToDelete(id);
     setShowDeleteModal(true);
   };
 
   const confirmDelete = () => {
-    console.log("Confirming delete for ID:", itemToDelete); // Debug log
+    console.log("Confirming delete for ID:", itemToDelete);
     axios
       .delete(`https://favnodemodulesapp.onrender.com/api/favorites/${itemToDelete}`)
       .then(() => {
-        // Filter out the deleted favorite
         const updatedFavorites = favorites.filter(fav => fav.id !== itemToDelete);
-        setFavorites(updatedFavorites);  // Ensure setFavorites is a function
+        setFavorites(updatedFavorites);
         setShowDeleteModal(false);
         setItemToDelete(null);
         toast.success("Package removed from favorites!");
@@ -36,27 +34,16 @@ const Favourites = ({ favorites, setFavorites }) => {
       });
   };
 
-  // Edit a specific favorite
   const updateFavorite = (id, updatedData) => {
-    axios
-      .put(`https://favnodemodulesapp.onrender.com/api/favorites/${id}`, updatedData)
-      .then((response) => {
-        // Update the favorite in the state
-        const updatedFavorites = favorites.map((fav) =>
-          fav.id === id ? { ...fav, ...response.data } : fav
-        );
-        setFavorites(updatedFavorites);  // Ensure setFavorites is a function
-        toast.success("Package updated!");
-      })
-      .catch((error) => {
-        toast.error("Error updating package!");
-        console.error("Error updating favorite:", error);
-      });
+    const updatedFavorites = favorites.map((fav) =>
+      fav.id === id ? { ...fav, ...updatedData } : fav
+    );
+    setFavorites(updatedFavorites); // Update state with the modified favorite
+    toast.success("Package updated!");
   };
 
   return (
     <div className="h-screen bg-gray-100 flex flex-col items-center">
-      {/* Header */}
       <div className="mt-10 text-center">
         <h1 className="text-3xl font-bold text-gray-800 mb-4">
           Welcome to Favorite NPM Packages
@@ -71,7 +58,6 @@ const Favourites = ({ favorites, setFavorites }) => {
         )}
       </div>
 
-      {/* Table */}
       <div className="mt-8 w-3/4 bg-white shadow rounded-lg">
         {favorites.length === 0 ? (
           <div className="text-center py-10">
@@ -87,12 +73,8 @@ const Favourites = ({ favorites, setFavorites }) => {
           <table className="w-full border-collapse border border-gray-200">
             <thead>
               <tr className="bg-gray-100">
-                <th className="border border-gray-200 px-4 py-2 text-left text-gray-600">
-                  Package Name
-                </th>
-                <th className="border border-gray-200 px-4 py-2 text-left text-gray-600">
-                  Actions
-                </th>
+                <th className="border border-gray-200 px-4 py-2 text-left text-gray-600">Package Name</th>
+                <th className="border border-gray-200 px-4 py-2 text-left text-gray-600">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -101,13 +83,7 @@ const Favourites = ({ favorites, setFavorites }) => {
                   <td className="border border-gray-200 px-4 py-2 text-gray-700">{fav.name}</td>
                   <td className="border border-gray-200 px-4 py-2">
                     <div className="flex items-center gap-4">
-                      {/* View Action */}
-                      <Modal favorite={fav} />
-
-                      {/* Edit Action */}
                       <EditModal favorite={fav} updateFavorite={updateFavorite} />
-
-                      {/* Delete Action */}
                       <button
                         className="text-red-500 hover:text-red-700"
                         onClick={() => handleDeleteClick(fav.id)}
@@ -125,7 +101,6 @@ const Favourites = ({ favorites, setFavorites }) => {
         )}
       </div>
 
-      {/* Delete Confirmation Modal */}
       {showDeleteModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-6 rounded-md shadow-lg">
