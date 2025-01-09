@@ -1,10 +1,15 @@
 const express = require('express');
 const app = express();
+const cors = require('cors');
 const port = 5000;
 
 app.use(express.json());
 
 const favorites = [];
+
+app.use(cors({
+  origin: 'http://localhost:3001'  // replace with your front-end URL
+}));
 
 // Retrieve all favorites
 app.get('/api/favorites', (req, res) => {
