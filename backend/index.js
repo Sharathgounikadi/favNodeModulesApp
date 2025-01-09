@@ -18,10 +18,11 @@ app.get('/api/favorites', (req, res) => {
 
 // Add a new favorite
 app.post('/api/favorites', (req, res) => {
-  const favorite = req.body;
+  const favorite = { ...req.body, id: favorites.length + 1 }; // Ensure id is assigned
   favorites.push(favorite);
   res.status(201).json(favorite);
 });
+
 
 // Edit an existing favorite
 app.put('/api/favorites/:id', (req, res) => {
