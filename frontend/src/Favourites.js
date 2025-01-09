@@ -3,25 +3,13 @@ import { useNavigate } from "react-router-dom";
 import { FaTrash, FaEdit } from "react-icons/fa";
 import Modal from "./Modal";
 import EditModal from "./EditModal";
+import { toast } from "react-toastify"; // <-- Add this import
+import axios from "axios";
 
-const Favourites = () => {
-  const [favorites, setFavorites] = useState([]);
+const Favourites = ({ favorites, setFavorites }) => {  // <-- Add setFavorites prop
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [itemToDelete, setItemToDelete] = useState(null);
-
   const navigate = useNavigate();
-
-  // Fetch favorites from localStorage on component mount
-  useEffect(() => {
-    const storedFavorites = JSON.parse(localStorage.getItem("favorites")) || [];
-    setFavorites(storedFavorites);
-  }, []);
-
-  // Save changes to localStorage
-  const updateLocalStorage = (updatedFavorites) => {
-    setFavorites(updatedFavorites);
-    localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
-  };
 
   // Delete a specific favorite
   const handleDeleteClick = (id) => {
@@ -30,18 +18,34 @@ const Favourites = () => {
   };
 
   const confirmDelete = () => {
-    const updatedFavorites = favorites.filter((fav) => fav.id !== itemToDelete);
-    updateLocalStorage(updatedFavorites);
-    setShowDeleteModal(false);
-    setItemToDelete(null);
+    axios.delete(`https://favnodemodulesapp.onrender.com/api/favorites/${itemToDelete}`)
+      .then(() => {
+        const updatedFavorites = favorites.filter(fav => fav.id !== itemToDelete);
+        setFavorites(updatedFavorites); // <-- Update favorites state
+        setShowDeleteModal(false);
+        setItemToDelete(null);
+        toast.success("Package removed from favorites!");
+      })
+      .catch(error => {
+        toast.error("Error deleting package!");
+        console.error('Error deleting favorite:', error);
+      });
   };
 
   // Edit a specific favorite
   const updateFavorite = (id, updatedData) => {
-    const updatedFavorites = favorites.map((fav) =>
-      fav.id === id ? { ...fav, ...updatedData } : fav
-    );
-    updateLocalStorage(updatedFavorites);
+    axios.put(`https://favnodemodulesapp.onrender.com/api/favorites/${id}`, updatedData)
+      .then(response => {
+        const updatedFavorites = favorites.map(fav =>
+          fav.id === id ? { ...fav, ...response.data } : fav
+        );
+        setFavorites(updatedFavorites); // <-- Update favorites state
+        toast.success("Package updated!");
+      })
+      .catch(error => {
+        toast.error("Error updating package!");
+        console.error('Error updating favorite:', error);
+      });
   };
 
   return (

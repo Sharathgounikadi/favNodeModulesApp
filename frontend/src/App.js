@@ -4,20 +4,22 @@ import Favourites from "./Favourites";
 import Home from "./Home";
 import Navbar from "./Navbar";
 import { toast } from "react-toastify";
+import axios from "axios";
 
 const App = () => {
-  const [favorites, setFavorites] = useState([]);       
+  const [favorites, setFavorites] = useState([]);
 
-  
   useEffect(() => {
-    const storedFavorites = JSON.parse(localStorage.getItem("favorites")) || [];
-    setFavorites(storedFavorites);
+    // Fetch favorites from the API
+    axios.get('https://favnodemodulesapp.onrender.com/api/favorites')
+      .then(response => {
+        setFavorites(response.data);
+      })
+      .catch(error => {
+        toast.error('Error fetching favorites!');
+        console.error('Error fetching favorites:', error);
+      });
   }, []);
-
-  // Save favorites to localStorage whenever favorites state changes
-  useEffect(() => {
-    localStorage.setItem("favorites", JSON.stringify(favorites));
-  }, [favorites]);
 
   // Add a favorite package
   const addFavorite = (pkg) => {
@@ -25,21 +27,17 @@ const App = () => {
       toast("Package already exists in favorites!");
       return;
     }
-    setFavorites([...favorites, { id: Date.now(), ...pkg }]);
+
+    axios.post('https://favnodemodulesapp.onrender.com/api/favorites', pkg)
+      .then(response => {
+        setFavorites([...favorites, response.data]);
+        toast.success("Package added to favorites!");
+      })
+      .catch(error => {
+        toast.error("Error adding package to favorites!");
+        console.error('Error adding favorite:', error);
+      });
   };
-
-  // Delete a specific favorite
-  // const deleteFavorite = (id) => {
-  //   setFavorites(favorites.filter((fav) => fav.id !== id));
-  // };
-
-  // Edit a specific favorite
-  // const updateFavorite = (id, updatedData) => {
-  //   const updatedFavorites = favorites.map((fav) =>
-  //     fav.id === id ? { ...fav, ...updatedData } : fav
-  //   );
-  //   setFavorites(updatedFavorites);
-  // };
 
   return (
     <Router>
@@ -52,13 +50,7 @@ const App = () => {
           />
           <Route
             path="/favorites"
-            element={
-              <Favourites
-                // favorites={favorites}
-                // deleteFavorite={deleteFavorite}
-                // updateFavorite={updateFavorite}
-              />
-            }
+            element={<Favourites favorites={favorites} setFavorites={setFavorites} />}
           />
         </Routes>
       </div>
