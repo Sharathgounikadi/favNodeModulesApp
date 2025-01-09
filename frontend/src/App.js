@@ -11,13 +11,14 @@ const App = () => {
 
   useEffect(() => {
     // Fetch favorites from the API
-    axios.get('https://favnodemodulesapp.onrender.com/api/favorites')
-      .then(response => {
+    axios
+      .get("https://favnodemodulesapp.onrender.com/api/favorites")
+      .then((response) => {
         setFavorites(response.data);
       })
-      .catch(error => {
-        toast.error('Error fetching favorites!');
-        console.error('Error fetching favorites:', error);
+      .catch((error) => {
+        toast.error("Error fetching favorites!");
+        console.error("Error fetching favorites:", error);
       });
   }, []);
 
@@ -28,14 +29,15 @@ const App = () => {
       return;
     }
 
-    axios.post('https://favnodemodulesapp.onrender.com/api/favorites', pkg)
-      .then(response => {
+    axios
+      .post("https://favnodemodulesapp.onrender.com/api/favorites", pkg)
+      .then((response) => {
         setFavorites([...favorites, response.data]);
         toast.success("Package added to favorites!");
       })
-      .catch(error => {
+      .catch((error) => {
         toast.error("Error adding package to favorites!");
-        console.error('Error adding favorite:', error);
+        console.error("Error adding favorite:", error);
       });
   };
 
@@ -44,13 +46,10 @@ const App = () => {
       <div className="text-black">
         <Navbar />
         <Routes>
-          <Route
-            path="/"
-            element={<Home addFavorite={addFavorite} />}
-          />
+          <Route path="/" element={<Home addFavorite={addFavorite} />} />
           <Route
             path="/favorites"
-            element={<Favourites favorites={favorites} setFavorites={setFavorites} />}
+            element={<Favourites favorites={favorites} />}
           />
         </Routes>
       </div>
