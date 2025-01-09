@@ -36,6 +36,19 @@ app.put('/api/favorites/:id', (req, res) => {
   }
 });
 
+// Delete a specific favorite
+app.delete('/api/favorites/:id', (req, res) => {
+  const { id } = req.params;
+  const index = favorites.findIndex(fav => fav.id === parseInt(id));
+  if (index !== -1) {
+      favorites.splice(index, 1); // Remove the item from the array
+      res.status(200).json({ message: 'Favorite deleted successfully' });
+  } else {
+      res.status(404).json({ message: 'Favorite not found' });
+  }
+});
+
+
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
