@@ -26,7 +26,7 @@ const EditModal = ({ favorite, updateFavorite }) => {
       })
       .then((response) => {
         updateFavorite(favorite.id, response.data);
-        toast.success("Package updated successfully!");
+        toast("Package updated successfully!");
         setOpen(false);
       })
       .catch((error) => {
