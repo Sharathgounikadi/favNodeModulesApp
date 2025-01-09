@@ -64,7 +64,7 @@ const Home = ({ addFavorite }) => {
 
     setSelectedPackage("");
     setReason("");
-    navigate("/favorites");
+    navigate("/favorites");   
   };
 
   return (
