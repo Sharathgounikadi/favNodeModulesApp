@@ -13,24 +13,29 @@ const Favourites = ({ favorites, setFavorites }) => {  // <-- Add setFavorites p
 
   // Delete a specific favorite
   const handleDeleteClick = (id) => {
+    console.log("Deleting favorite with ID:", id); // Add this log for debugging
     setItemToDelete(id);
     setShowDeleteModal(true);
-  };
+};
 
-  const confirmDelete = () => {
-    axios.delete(`https://favnodemodulesapp.onrender.com/api/favorites/${itemToDelete}`)
+
+const confirmDelete = () => {
+  console.log("Confirming delete for ID:", itemToDelete); // Add this log for debugging
+  axios.delete(`https://favnodemodulesapp.onrender.com/api/favorites/${itemToDelete}`)
       .then(() => {
-        const updatedFavorites = favorites.filter(fav => fav.id !== itemToDelete);
-        setFavorites(updatedFavorites); // <-- Update favorites state
-        setShowDeleteModal(false);
-        setItemToDelete(null);
-        toast.success("Package removed from favorites!");
+          const updatedFavorites = favorites.filter(fav => fav.id !== itemToDelete);
+          setFavorites(updatedFavorites);
+          setShowDeleteModal(false);
+          setItemToDelete(null);
+          toast.success("Package removed from favorites!");
       })
       .catch(error => {
-        toast.error("Error deleting package!");
-        console.error('Error deleting favorite:', error);
+          toast.error("Error deleting package!");
+          console.error('Error deleting favorite:', error);
       });
-  };
+};
+
+
 
   // Edit a specific favorite
   const updateFavorite = (id, updatedData) => {
@@ -90,8 +95,8 @@ const Favourites = ({ favorites, setFavorites }) => {  // <-- Add setFavorites p
               </tr>
             </thead>
             <tbody>
-              {favorites.map((fav) => (
-                <tr key={fav.id} className="border-t border-gray-200">
+              {favorites.map((fav, index) => (
+                <tr key={index} className="border-t border-gray-200">
                   <td className="border border-gray-200 px-4 py-2 text-gray-700">{fav.name}</td>
                   <td className="border border-gray-200 px-4 py-2">
                     <div className="flex items-center gap-4">

@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import 'react-toastify/dist/ReactToastify.css';
 import { toast } from 'react-toastify';
 import { useNavigate } from "react-router-dom";
+import axios from 'axios';
 
 const Home = ({ addFavorite }) => {
     const [searchQuery, setSearchQuery] = useState("");
@@ -17,12 +18,8 @@ const Home = ({ addFavorite }) => {
         if (!query) return;
         const response = await fetch(`https://api.npms.io/v2/search?q=${query}`);
         const data = await response.json();
-        console.log(data)
+        console.log(data);
         setSearchResults(data.results.map((pkg) => pkg.package.name));
-        // setPlace(data.results.map((pkg) => pkg.package.description))
-        // console.log(data.results.map((pkg) => pkg.package.description))
-        // console.log(data.results.map((pkg) => pkg.score.final))
-        // console.log(data.results.map((pkg) => pkg.score.detail.popularity))
     };
 
     const debounce = (func, delay) => {
@@ -43,7 +40,7 @@ const Home = ({ addFavorite }) => {
         }
     }, [searchQuery, debouncedFetchPackages]);
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         let valid = true;
 
         if (!selectedPackage) {
@@ -65,17 +62,24 @@ const Home = ({ addFavorite }) => {
             return;
         }
 
-        const favorites = JSON.parse(localStorage.getItem("favorites")) || [];
-        const newFavorite = { name: selectedPackage, reason: reason };
-        favorites.push(newFavorite);
-        localStorage.setItem("favorites", JSON.stringify(favorites));
+        // Post the favorite to the backend
+        try {
+            const response = await axios.post('https://favnodemodulesapp.onrender.com/api/favorites', {
+                name: selectedPackage,
+                reason: reason,
+            });
 
-        toast("Added to favorites", { autoClose: 1000 });
-        addFavorite(newFavorite);
+            // Assuming the response returns the new favorite data, call addFavorite to update the UI
+            addFavorite(response.data);
 
-        setSelectedPackage("");
-        setReason("");
-        navigate("/favorites");
+            toast("Added to favorites", { autoClose: 1000 });
+            setSelectedPackage("");
+            setReason("");
+            navigate("/favorites");
+        } catch (error) {
+            toast.error("Failed to add favorite!", { autoClose: 1000 });
+            console.error("Error adding favorite:", error);
+        }
     };
 
     return (
