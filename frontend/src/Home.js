@@ -61,7 +61,6 @@ const Home = ({ addFavorite }) => {
 
     const favorite = { name: selectedPackage, reason };
     addFavorite(favorite);
-
     setSelectedPackage("");
     setReason("");
     navigate("/favorites");   
