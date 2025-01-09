@@ -17,8 +17,8 @@ const App = () => {
         setFavorites(response.data);
       })
       .catch((error) => {
-        toast.error("Error fetching favorites!");
-        console.error("Error fetching favorites:", error);
+        toast.error(error.messsage);
+        console.error("Error fetching favorites:", error.messsage);
       });
   }, []);
 
@@ -36,8 +36,8 @@ const App = () => {
         toast.success("Package added to favorites!");
       })
       .catch((error) => {
-        toast.error("Error adding package to favorites!");
-        console.error("Error adding favorite:", error);
+        toast.error(error.messsage);
+        console.error( error.message);
       });
   };
 
@@ -49,7 +49,7 @@ const App = () => {
           <Route path="/" element={<Home addFavorite={addFavorite} />} />
           <Route
             path="/favorites"
-            element={<Favourites favorites={favorites} />}
+            element={<Favourites favorites={favorites}  setFavorites={setFavorites}/>}
           />
         </Routes>
       </div>

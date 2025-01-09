@@ -1,55 +1,56 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaTrash, FaEdit } from "react-icons/fa";
 import Modal from "./Modal";
 import EditModal from "./EditModal";
-import { toast } from "react-toastify"; // <-- Add this import
+import { toast } from "react-toastify";
 import axios from "axios";
 
-const Favourites = ({ favorites, setFavorites }) => {  // <-- Add setFavorites prop
+const Favourites = ({ favorites, setFavorites }) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [itemToDelete, setItemToDelete] = useState(null);
   const navigate = useNavigate();
 
   // Delete a specific favorite
   const handleDeleteClick = (id) => {
-    console.log("Deleting favorite with ID:", id); // Add this log for debugging
+    console.log("Deleting favorite with ID:", id); // Debug log
     setItemToDelete(id);
     setShowDeleteModal(true);
-};
+  };
 
-
-const confirmDelete = () => {
-  console.log("Confirming delete for ID:", itemToDelete); // Add this log for debugging
-  axios.delete(`https://favnodemodulesapp.onrender.com/api/favorites/${itemToDelete}`)
+  const confirmDelete = () => {
+    console.log("Confirming delete for ID:", itemToDelete); // Debug log
+    axios
+      .delete(`https://favnodemodulesapp.onrender.com/api/favorites/${itemToDelete}`)
       .then(() => {
-          const updatedFavorites = favorites.filter(fav => fav.id !== itemToDelete);
-          setFavorites(updatedFavorites);
-          setShowDeleteModal(false);
-          setItemToDelete(null);
-          toast.success("Package removed from favorites!");
+        // Filter out the deleted favorite
+        const updatedFavorites = favorites.filter(fav => fav.id !== itemToDelete);
+        setFavorites(updatedFavorites);  // Ensure setFavorites is a function
+        setShowDeleteModal(false);
+        setItemToDelete(null);
+        toast.success("Package removed from favorites!");
       })
-      .catch(error => {
-          toast.error("Error deleting package!");
-          console.error('Error deleting favorite:', error);
+      .catch((error) => {
+        toast.error("Error deleting package!");
+        console.error("Error deleting favorite:", error);
       });
-};
-
-
+  };
 
   // Edit a specific favorite
   const updateFavorite = (id, updatedData) => {
-    axios.put(`https://favnodemodulesapp.onrender.com/api/favorites/${id}`, updatedData)
-      .then(response => {
-        const updatedFavorites = favorites.map(fav =>
+    axios
+      .put(`https://favnodemodulesapp.onrender.com/api/favorites/${id}`, updatedData)
+      .then((response) => {
+        // Update the favorite in the state
+        const updatedFavorites = favorites.map((fav) =>
           fav.id === id ? { ...fav, ...response.data } : fav
         );
-        setFavorites(updatedFavorites); // <-- Update favorites state
+        setFavorites(updatedFavorites);  // Ensure setFavorites is a function
         toast.success("Package updated!");
       })
-      .catch(error => {
+      .catch((error) => {
         toast.error("Error updating package!");
-        console.error('Error updating favorite:', error);
+        console.error("Error updating favorite:", error);
       });
   };
 
