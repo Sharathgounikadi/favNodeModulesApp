@@ -43,6 +43,11 @@ const Home = ({ addFavorite, favorites }) => {
   }, [searchQuery, debouncedFetchPackages]);
 
   const handleSubmit = () => {
+
+    if (favorites.some((fav) => fav.name === selectedPackage)) {
+      toast.warning("Package already exists in favorites!");
+      return; // Stop execution if the package already exists
+    }
     let valid = true;
 
     if (!selectedPackage) {
@@ -65,10 +70,10 @@ const Home = ({ addFavorite, favorites }) => {
     }
 
     // Check if the package is already in favorites
-    if (favorites.some((fav) => fav.name === selectedPackage)) {
-      toast.warning("Package already exists in favorites!");
-      return;
-    }
+    // if (favorites.some((fav) => fav.name === selectedPackage)) {
+    //   toast.warning("Package already exists in favorites!");
+    //   return;
+    // }
 
     const favorite = { name: selectedPackage, reason };
     addFavorite(favorite);
