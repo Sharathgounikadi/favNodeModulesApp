@@ -8,9 +8,8 @@ app.use(express.json());
 const favorites = [];
 
 app.use(cors({
-  origin: 'https://fav-node-modules-app.vercel.app/'  
+  origin: ['http://localhost:3001', 'https://fav-node-modules-app.vercel.app']
 }));
-
 // Retrieve all favorites
 app.get('/api/favorites', (req, res) => {
   res.json(favorites);
