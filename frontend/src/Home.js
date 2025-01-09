@@ -14,9 +14,14 @@ const Home = ({ addFavorite }) => {
 
   const fetchPackages = async (query) => {
     if (!query) return;
-    const response = await fetch(`https://api.npms.io/v2/search?q=${query}`);
-    const data = await response.json();
-    setSearchResults(data.results.map((pkg) => pkg.package.name));
+    try {
+      const response = await fetch(`https://api.npms.io/v2/search?q=${query}`);
+      const data = await response.json();
+      setSearchResults(data.results.map((pkg) => pkg.package.name));
+    } catch (error) {
+      toast.error("Error fetching packages. Please try again.");
+      console.error("Fetch Error:", error);
+    }
   };
 
   const debounce = (func, delay) => {
@@ -55,15 +60,22 @@ const Home = ({ addFavorite }) => {
     }
 
     if (!valid) {
-      toast("Please fill in all required fields", { autoClose: 1000 });
+      toast.error("Please fill in all required fields.", { autoClose: 2000 });
       return;
     }
 
+    // Create a favorite object and invoke addFavorite
     const favorite = { name: selectedPackage, reason };
-    addFavorite(favorite);
-    setSelectedPackage("");
-    setReason("");
-    navigate("/favorites");   
+    try {
+      addFavorite(favorite);
+      toast.success("Package added to favorites successfully!", { autoClose: 2000 });
+      setSelectedPackage("");
+      setReason("");
+      navigate("/favorites");
+    } catch (error) {
+      toast.error("Failed to add package to favorites.");
+      console.error("Add Favorite Error:", error);
+    }
   };
 
   return (
