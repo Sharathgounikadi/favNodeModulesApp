@@ -25,17 +25,19 @@ app.post('/api/favorites', (req, res) => {
 
 
 // Edit an existing favorite
+// Edit an existing favorite
 app.put('/api/favorites/:id', (req, res) => {
   const { id } = req.params;
   const updatedFavorite = req.body;
   const index = favorites.findIndex(fav => fav.id === parseInt(id));
   if (index !== -1) {
-    favorites[index] = updatedFavorite;
-    res.json(updatedFavorite);
+      favorites[index] = { ...favorites[index], ...updatedFavorite }; // Merge updates
+      res.json(favorites[index]);
   } else {
-    res.status(404).json({ message: 'Favorite not found' });
+      res.status(404).json({ message: 'Favorite not found' });
   }
 });
+
 
 // Delete a specific favorite
 app.delete('/api/favorites/:id', (req, res) => {
