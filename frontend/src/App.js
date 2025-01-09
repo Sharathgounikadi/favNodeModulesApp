@@ -9,10 +9,6 @@ import axios from "axios";
 const App = () => {
   const [favorites, setFavorites] = useState([]);
 
-  useEffect(()=>{
-    toast.success("Test notification!");
-
-  },[])
 
   useEffect(() => {
     // Fetch favorites from the API
