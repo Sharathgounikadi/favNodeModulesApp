@@ -83,6 +83,7 @@ const Favourites = ({ favorites, setFavorites }) => {
                   <td className="border border-gray-200 px-4 py-2 text-gray-700">{fav.name}</td>
                   <td className="border border-gray-200 px-4 py-2">
                     <div className="flex items-center gap-4">
+                      <Modal favorite={fav} />
                       <EditModal favorite={fav} updateFavorite={updateFavorite} />
                       <button
                         className="text-red-500 hover:text-red-700"
