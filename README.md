@@ -20,7 +20,7 @@ A full-stack application that enables users to search for NPM packages, mark the
 
 - **Frontend**: React.js
 - **Styling**: Tailwind CSS
-- **State Management**: React Hooks (`useState`, `useEffect`)
+- **State Management**: React Hooks (`useState`, `useEffect`,`useCallback`)
 - **Routing**: React Router DOM
 - **Toast Notifications**: `react-toastify`
 - **API Integration**: Axios for connecting with the backend
